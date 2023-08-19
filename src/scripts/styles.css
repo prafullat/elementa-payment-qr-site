@@ -18,7 +18,8 @@ body {
   }
 
   .main-div, form {
-    width: 400px;
+    width: 80vw;
+    height: 100vh;
     margin: 0 auto;
     background-color: #fff;
     padding: 40px;
