@@ -50,6 +50,8 @@ function generateQRCode () {
     qrcode.makeCode(textVal);
     var message = document.getElementById("message")
     message.innerHTML = `Please pay using following UPI QR code: <br><br> Name : ${name.value}<br> Flat : ${selectedOption}-${flat.value}<br><br>`
+    var reloadButton = document.getElementById("reloadbutton")
+    reloadButton.innerHTML = `<br><br><input type="button" name="reload" value="Clear and reload form" onclick="reloadTheForm();"/>`
     window.scrollTo({
         top: 0,
         behavior: "smooth" 
@@ -61,4 +63,21 @@ function loadValue() {
      document.getElementById("amount").value=1000
 }
 
+function reloadTheForm() {
+    document.getElementById("upi").value=merchant_upi;
+    document.getElementById("amount").value=1000 
+    document.getElementById("name").value = "";
+    document.getElementById("flat").value = "";
+    var dropdown = document.getElementById("building");
+    dropdown.selectedIndex = 0; 
+    var qrdiv = document.getElementById("qrdivcontainer");   
+    qrdiv.innerHTML = `<div id="message"></div>
+    <div id="qrcode"></div>
+    <div id="reloadbutton"></div>` 
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth" 
+      });  
+}
 
