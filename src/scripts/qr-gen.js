@@ -11,22 +11,27 @@ function generateQRCode () {
     
     var amount = document.getElementById("amount");
     var name = document.getElementById("name");
-    var flat = document.getElementById("flat");
-    var dropdown = document.getElementById("building");
-    var selectedOption = dropdown.options[dropdown.selectedIndex].value;
+    var flat_dropdown = document.getElementById("flat");
+    var flat = flat_dropdown.options[flat_dropdown.selectedIndex].value;
+
+    var building_dropdown = document.getElementById("building");
+    var building = building_dropdown.options[building_dropdown.selectedIndex].value;
+   
+    var upi_dropdown = document.getElementById("upi");
+    merchant_upi = upi_dropdown.options[upi_dropdown.selectedIndex].value
+   
     const namesArray = name.value.split(" ");
-    var context=`${selectedOption}-${flat.value}-${namesArray[0]}`;
+    var context=`${building}-${flat}-${namesArray[0]}`;
     console.log(context)
-    var selectedOption = dropdown.options[dropdown.selectedIndex].value;
-    if (!(/^\d{3,4}$/.test(flat.value))) {
+    if (!(/^\d{3,4}$/.test(flat))) {
         alert("Input correct flat number with 3 or 4 digits")
-        flat.focus();
+        flat_dropdown.focus();
         return;
     }
 
-    if (dropdown.selectedIndex == 0) {
+    if (building_dropdown.selectedIndex == 0) {
         alert("Input building")
-        dropdown.focus()
+        building_dropdown.focus()
         return
     }
     if (!name.value) {
@@ -39,9 +44,9 @@ function generateQRCode () {
         amount.focus();
         return;
     }
-    if (!flat.value) {
+    if (flat_dropdown.selectedIndex == 0) {
         alert("Input a flat number");
-        flat.focus();
+        flat_dropdown.focus();
         return;
     }
     
@@ -49,7 +54,7 @@ function generateQRCode () {
     console.log(textVal);
     qrcode.makeCode(textVal);
     var message = document.getElementById("message")
-    message.innerHTML = `Please pay using following UPI QR code: <br><br> Name : ${name.value}<br> Flat : ${selectedOption}-${flat.value}<br><br>`
+    message.innerHTML = `Please pay using following UPI QR code: <br><br> Name : ${name.value}<br> Flat : ${building}-${flat}<br><br>`
     var reloadButton = document.getElementById("reloadbutton")
     reloadButton.innerHTML = `<br><br><input type="button" name="reload" value="Clear and reload form" onclick="reloadTheForm();"/>`
     window.scrollTo({
@@ -59,12 +64,29 @@ function generateQRCode () {
 }
 
 function loadValue() {
-     document.getElementById("upi").value=merchant_upi;
+     document.getElementById("upi").selectedIndex = 0;
      document.getElementById("amount").value=1000
+     var options = [];
+     for (let i = 1; i <= 15; i++) {
+        let a  = (i * 100)
+        for (let j = 1; j <= 6; j++) {
+            let k = a + j
+            options.push(k)
+        }
+     }
+     var flat_dropdown = document.getElementById("flat");
+     flat_dropdown.innerHTML = `<option value="" disabled selected>Select your flat number</option>`
+     options.forEach((optionText, index) => {
+        const option = document.createElement("option");
+        option.value = optionText
+        option.text = optionText;
+        flat_dropdown.appendChild(option);
+      });     
+
 }
 
 function reloadTheForm() {
-    document.getElementById("upi").value=merchant_upi;
+    document.getElementById("upi").selectedIndex = 0;
     document.getElementById("amount").value=1000 
     document.getElementById("name").value = "";
     document.getElementById("flat").value = "";
@@ -74,7 +96,8 @@ function reloadTheForm() {
     qrdiv.innerHTML = `<div id="message"></div>
     <div id="qrcode"></div>
     <div id="reloadbutton"></div>` 
-
+    var f_dropdown = document.getElementById("flat");
+    f_dropdown.selectedIndex = 0; 
     window.scrollTo({
         top: 0,
         behavior: "smooth" 

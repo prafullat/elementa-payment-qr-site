@@ -43,13 +43,18 @@
     
               <div class="form-group">
                 <label for="flat">Flat:</label>
-                <input id="flat" name="flat" placeholder="Enter your flat number:"></input>
+                <select  id="flat" name="flat" >
+                    <option value="" disabled selected>Select your flat number</option>
+                </select>
               </div>
        
           <div class="form-group">
             <label for="upi">Receiver's UPI: (Festival account: elementap1@srcb) Note: Don't change the default value</label>
-            <input type="text" id="upi" name="upi" value="elementap1@srcb">
-          </div>
+            <select id="upi" name="upi" >
+                <option value="elementap1@srcb" selected>elementap1@srcb</option>
+                <option value="elementaph1chs@icici">elementaph1chs@icici</option>
+            </select>
+            </div>
       
           <div class="form-group">
             <label for="amount">Amount:</label>
