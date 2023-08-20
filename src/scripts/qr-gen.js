@@ -203,5 +203,7 @@ function saveAndReloadTheForm(payment_type="upi") {
         top: 0,
         behavior: "smooth" 
       });  
+    alert("Thanks for your donation, Form has been saved and reloaded.")
+  
 }
 
