@@ -109,10 +109,10 @@ function viewAllEntries() {
         let header = document.createElement("h3")
         if (confirmations) {
             header.innerHTML = `${confirmations.length} Payment confirmations found locally`
+            container.appendChild(header)
             if (confirmations.length == 0)
                 return
         }
-        container.appendChild(header)
 
          // Create the table element
          let table = document.createElement("table");
@@ -174,7 +174,34 @@ function saveAndReloadTheForm(payment_type="upi") {
    
     if(localStorage) {
         if (payment_type == "cash") {
-            merchant_upi = "NoUPI_ForCashTransaction"
+
+            if (!(/^\d{3,4}$/.test(flat))) {
+                alert("Input correct flat number with 3 or 4 digits")
+                flat_dropdown.focus();
+                return;
+            }
+        
+            if (building_dropdown.selectedIndex == 0) {
+                alert("Input building")
+                building_dropdown.focus()
+                return
+            }
+            if (!name) {
+                alert("Input name");
+                name.focus();
+                return;
+            }
+            if (!amount) {
+                alert("Input amount");
+                amount.focus();
+                return;
+            }
+            if (flat_dropdown.selectedIndex == 0) {
+                alert("Input a flat number");
+                flat_dropdown.focus();
+                return;
+            }
+            merchant_upi = "NotApplicable"
         }
         confirmations = JSON.parse(localStorage.getItem("confirmations") || "[]");
         const currentDate = new Date();
