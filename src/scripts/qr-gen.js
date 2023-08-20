@@ -11,6 +11,7 @@ function generateQRCode () {
     
     var amount = document.getElementById("amount");
     var name = document.getElementById("name");
+
     var flat_dropdown = document.getElementById("flat");
     var flat = flat_dropdown.options[flat_dropdown.selectedIndex].value;
 
@@ -56,7 +57,14 @@ function generateQRCode () {
     var message = document.getElementById("message")
     message.innerHTML = `Please pay using following UPI QR code: <br><br> Name : ${name.value}<br> Flat : ${building}-${flat}<br><br>`
     var reloadButton = document.getElementById("reloadbutton")
-    reloadButton.innerHTML = `<br><br><input type="button" name="reload" value="Clear and reload form" onclick="reloadTheForm();"/>`
+    var paytmtconfirmation = document.getElementById("paymentconfirm")
+    paytmtconfirmation.innerHTML = `<label class="custom-checkbox">
+    <input type="checkbox" id="paymentconfirmcheckbox" class="bigger-checkbox">
+    Is the payment through QR code succcessful? (Volunteers, Please check this and click Save and reload.)
+  </label>
+  <br><br>
+  `
+    reloadButton.innerHTML = `<br><input type="button" name="reload" value="Save the payment confirmation and reload form" onclick="saveAndReloadTheForm();"/>`
     window.scrollTo({
         top: 0,
         behavior: "smooth" 
@@ -85,7 +93,99 @@ function loadValue() {
 
 }
 
-function reloadTheForm() {
+function addCashEntry() {
+    saveAndReloadTheForm("cash")
+}
+
+function viewAllEntries() {
+    if(localStorage) {
+        confirmations = JSON.parse(localStorage.getItem("confirmations") || "[]");
+        entries_div = document.getElementById("entries_table")
+        entries_div.innerHTML = ""
+        
+         // Get the container element where the table will be inserted
+         let container = document.getElementById("entries_table");
+        
+        let header = document.createElement("h3")
+        if (confirmations) {
+            header.innerHTML = `${confirmations.length} Payment confirmations found locally`
+            if (confirmations.length == 0)
+                return
+        }
+        container.appendChild(header)
+
+         // Create the table element
+         let table = document.createElement("table");
+         
+         // Get the keys (column names) of the first object in the JSON data
+         let cols = Object.keys(confirmations[0]);
+         
+         // Create the header element
+         let thead = document.createElement("thead");
+         let tr = document.createElement("tr");
+         
+         // Loop through the column names and create header cells
+         cols.forEach((item) => {
+            let th = document.createElement("th");
+            th.innerText = item; // Set the column name as the text of the header cell
+            tr.appendChild(th); // Append the header cell to the header row
+         });
+         thead.appendChild(tr); // Append the header row to the header
+         table.append(tr) // Append the header to the table
+         
+         // Loop through the JSON data and create table rows
+         confirmations.forEach((item) => {
+            let tr = document.createElement("tr");
+            
+            // Get the values of the current object in the JSON data
+            let vals = Object.values(item);
+            
+            // Loop through the values and create table cells
+            vals.forEach((elem) => {
+               let td = document.createElement("td");
+               td.innerText = elem; // Set the value as the text of the table cell
+               tr.appendChild(td); // Append the table cell to the table row
+            });
+            table.appendChild(tr); // Append the table row to the table
+         });
+         container.appendChild(table) // Append the table to the container element
+    } else {
+        alert("Local storage feature is not supported on this browser")
+    }
+}
+
+function saveAndReloadTheForm(payment_type="upi") {
+    var paymentconfirm = document.getElementById("paymentconfirmcheckbox")
+    var payment_checked = true
+    if (paymentconfirm) {
+        payment_checked = paymentconfirm.checked
+    }
+    const upi_dropdown = document.getElementById("upi");
+    var merchant_upi = upi_dropdown.options[upi_dropdown.selectedIndex].value
+
+    var amount = document.getElementById("amount").value;
+    var name = document.getElementById("name").value;
+    
+    var flat_dropdown = document.getElementById("flat");
+    var flat = flat_dropdown.options[flat_dropdown.selectedIndex].value;
+
+    var building_dropdown = document.getElementById("building");
+    var building = building_dropdown.options[building_dropdown.selectedIndex].value;
+   
+    if(localStorage) {
+        if (payment_type == "cash") {
+            merchant_upi = "NoUPI_ForCashTransaction"
+        }
+        confirmations = JSON.parse(localStorage.getItem("confirmations") || "[]");
+        const currentDate = new Date();
+        const dateString = currentDate.toLocaleDateString();
+        const timeString = currentDate.toLocaleTimeString();
+        confirmations.push({"name":name, "building" : building, "flat": flat, "amount" : amount, "payment_type" : payment_type, "upi" : merchant_upi, "payment_confirmed" : payment_checked, "txn_datetime" : `${dateString}-${timeString}`})
+        localStorage.setItem("confirmations", JSON.stringify(confirmations));
+    } else {
+        alert("Local storage feature is not supported on this browser")
+    }
+
     document.getElementById("upi").selectedIndex = 0;
     document.getElementById("amount").value=1000 
     document.getElementById("name").value = "";
@@ -95,6 +195,7 @@ function reloadTheForm() {
     var qrdiv = document.getElementById("qrdivcontainer");   
     qrdiv.innerHTML = `<div id="message"></div>
     <div id="qrcode"></div>
+    <div id="paymentconfirm"></div>
     <div id="reloadbutton"></div>` 
     var f_dropdown = document.getElementById("flat");
     f_dropdown.selectedIndex = 0; 

@@ -14,12 +14,11 @@ body {
   }
 
   .container {
-    position: relative;
+    /* position: relative; */
   }
 
   .main-div, form {
     width: 80vw;
-    height: 100vh;
     margin: 0 auto;
     background-color: #fff;
     padding: 40px;
@@ -85,3 +84,30 @@ body {
     }
   }
   
+  .custom-checkbox {
+    display: inline-block;
+    position: relative;
+    padding-left: 30px; /* Adjust the padding to accommodate the custom checkbox size */
+    margin-right: 10px; /* Add some space between checkbox and label */
+  }
+  
+  .bigger-checkbox {
+    width: 20px;
+    height: 20px; 
+    position: absolute;
+    left: 0;
+    opacity: 20px; 
+  }
+  
+  /* Custom checkbox style */
+  .bigger-checkbox::before {
+    content: "";
+    display: inline-block;
+    width: 20px; /* Size of the custom checkbox */
+    height: 20px; /* Size of the custom checkbox */
+    border: 2px solid #000; /* Border style of the custom checkbox */
+    background-color: transparent; /* Background color of the custom checkbox */
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
