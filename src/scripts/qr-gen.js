@@ -82,7 +82,7 @@ function generateQRCode () {
     if (volunteer == 1) {
         reloadButton.innerHTML = `<br><input type="button" name="reload" value="Save the payment confirmation and reload form" onclick="saveAndReloadTheForm();"/>`
     } else {
-        reloadButton.innerHTML = `<a href="mailto:elementaph1chs@gmail.com,customercare.elementa@gmail.com?Subject=Festival%20Collection%20for%20${building}-${flat}&Body=Please%20record%20this%20payment%20in%20Adda">
+        reloadButton.innerHTML = `<a href="mailto:elementaph1chs@gmail.com,customercare.elementa@gmail.com?Subject=Festival%20Collection%20for%20${building}-${flat}&Body=Dear Team,%0D%0A%0D%0APlease%20record%20this%20payment%20in%20Adda,%20Details%20below:%0D%0AUPI:${merchant_upi}%0D%0AName:${name.value}%0D%0AAmount:${amount.value}%0D%0AFlat:${building}-${flat}">
         <input type="button" name="email_" value="Please email payment confirmation after successful payment">
         </input><br>
     </a><br>`
