@@ -2,6 +2,12 @@ var merchant_name = 'Elementa Phase 1 CHS Festival';
 var merchant_upi = 'elementap1@srcb'
 
 function generateQRCode () {
+    const urlParams = new URLSearchParams(window.location.search);
+    var volunteer = urlParams.get('volunteer');
+    if (!volunteer)  {
+        volunteer = 0
+    }
+
     var qrcodeDiv = document.getElementById("qrcode");
     qrcodeDiv.innerHTML = '';
     var qrcode = new QRCode(qrcodeDiv, {
@@ -22,7 +28,7 @@ function generateQRCode () {
     merchant_upi = upi_dropdown.options[upi_dropdown.selectedIndex].value
    
     const namesArray = name.value.split(" ");
-    var context=`${building}-${flat}-${namesArray[0]}`;
+    var context=`F${building}-${flat}-${namesArray[0]}`;
     console.log(context)
     if (!(/^\d{3,4}$/.test(flat))) {
         alert("Input correct flat number with 3 or 4 digits")
@@ -56,15 +62,31 @@ function generateQRCode () {
     qrcode.makeCode(textVal);
     var message = document.getElementById("message")
     message.innerHTML = `Please pay using following UPI QR code: <br><br> Name : ${name.value}<br> Flat : ${building}-${flat}<br><br>`
+    
     var reloadButton = document.getElementById("reloadbutton")
     var paytmtconfirmation = document.getElementById("paymentconfirm")
-    paytmtconfirmation.innerHTML = `<label class="custom-checkbox">
-    <input type="checkbox" id="paymentconfirmcheckbox" class="bigger-checkbox">
-    Is the payment through QR code succcessful? (Volunteers, Please check this and click Save and reload.)
-  </label>
-  <br><br>
-  `
-    reloadButton.innerHTML = `<br><input type="button" name="reload" value="Save the payment confirmation and reload form" onclick="saveAndReloadTheForm();"/>`
+    var qrbutton = document.getElementById("qrbutton")
+    
+    if (volunteer == 1) {
+        paytmtconfirmation.innerHTML = `<label class="custom-checkbox">
+        <input type="checkbox" id="paymentconfirmcheckbox" class="bigger-checkbox">
+        Is the payment through QR code succcessful? (Volunteers, Please check this and click Save and reload.)
+        </label>
+    <br>
+    `
+    }
+    qrbutton.innerHTML = `<br><a href="${textVal}">
+    <input type="button" name="pay_upi" value="Scan QR or Click to open your UPI App">
+    </input><br>
+</a><br>`
+    if (volunteer == 1) {
+        reloadButton.innerHTML = `<br><input type="button" name="reload" value="Save the payment confirmation and reload form" onclick="saveAndReloadTheForm();"/>`
+    } else {
+        reloadButton.innerHTML = `<a href="mailto:elementaph1chs@gmail.com,customercare.elementa@gmail.com?Subject=Festival%20Collection%20for%20${building}-${flat}&Body=Please%20record%20this%20payment%20in%20Adda">
+        <input type="button" name="email_" value="Please email payment confirmation after successful payment">
+        </input><br>
+    </a><br>`
+    }
     window.scrollTo({
         top: 0,
         behavior: "smooth" 
@@ -89,8 +111,19 @@ function loadValue() {
         option.value = optionText
         option.text = optionText;
         flat_dropdown.appendChild(option);
-      });     
-
+      });    
+    const urlParams = new URLSearchParams(window.location.search);
+    var volunteer = urlParams.get('volunteer');
+    if (!volunteer)  {
+        volunteer = 0
+    }      
+    cashbutton = document.getElementsByName("addcashbutton")[0] 
+    viewallbutton = document.getElementsByName("viewallbutton")[0]
+    if (volunteer == 0) {
+        cashbutton.style.visibility = "hidden";
+        viewallbutton.style.visibility = "hidden";
+    } else {
+    }
 }
 
 function addCashEntry() {

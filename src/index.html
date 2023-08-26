@@ -17,6 +17,7 @@
                 <label for="qrcode">
                     <div id="message"></div>
                     <div id="qrcode"></div>
+                    <div id="qrbutton"></div>
                     <div id="paymentconfirm"></div>
                     <div id="reloadbutton"></div>
                 </label>
@@ -24,7 +25,7 @@
 
             <div class="form-group">
                 <label for="name">Name:</label>
-                <input id="name" name="name" placeholder="Enter your name:"></input>
+                <input id="name" name="name" placeholder="Enter your name"></input>
             </div>
 
             <div class="form-group">
@@ -70,11 +71,11 @@
                 <input type="button" name="generate" value="(For all) Generate Payment QR and donate using any UPI app." onclick="generateQRCode();" />
             </div>
             <div class="form-group">
-                <input type="button" name="generate" value="(For Volunteers) Please record cash entry in case of cash donation."
+                <input type="button" name="addcashbutton" id="addcashbuttonid" value="(For Volunteers) Please record cash entry in case of cash donation."
                     onclick="addCashEntry();" />
             </div>
             <div class="form-group">
-                <input type="button" name="generate" value="(For Volunteers) View all payment confirmations"
+                <input type="button" name="viewallbutton" id="viewallbuttonid" value="(For Volunteers) View all payment confirmations"
                     onclick="viewAllEntries();" />
             </div>
             <div class="form-group">

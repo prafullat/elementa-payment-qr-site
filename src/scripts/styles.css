@@ -13,6 +13,11 @@ body {
     left: 100%;
   }
 
+  table, th, td {
+    border: 1px solid black;
+  }
+  
+
   .container {
     /* position: relative; */
   }
