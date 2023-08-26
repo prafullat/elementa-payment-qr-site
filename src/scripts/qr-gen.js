@@ -28,7 +28,7 @@ function generateQRCode () {
     merchant_upi = upi_dropdown.options[upi_dropdown.selectedIndex].value
    
     const namesArray = name.value.split(" ");
-    var context=`F${building}-${flat}-${namesArray[0]}`;
+    var context=`F_${building}-${flat}-${namesArray[0]}`;
     console.log(context)
     if (!(/^\d{3,4}$/.test(flat))) {
         alert("Input correct flat number with 3 or 4 digits")
