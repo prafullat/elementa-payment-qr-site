@@ -130,6 +130,19 @@ function addCashEntry() {
     saveAndReloadTheForm("cash")
 }
 
+function jsonToCsv(jsonData) {
+    let csv = '';
+    // Get the headers
+    let headers = Object.keys(jsonData[0]);
+    csv += headers.join(',') + '\n';
+    // Add the data
+    jsonData.forEach(function (row) {
+        let data = headers.map(header => JSON.stringify(row[header])).join(','); 
+        csv += data + '\n';
+    });
+    return csv;
+}
+
 function viewAllEntries() {
     if(localStorage) {
         confirmations = JSON.parse(localStorage.getItem("confirmations") || "[]");
@@ -182,6 +195,31 @@ function viewAllEntries() {
             table.appendChild(tr); // Append the table row to the table
          });
          container.appendChild(table) // Append the table to the container element
+
+        // Create a CSV file and allow the user to download it
+        let csvData = jsonToCsv(confirmations); // Add .items.data
+        let blob = new Blob([csvData], { type: 'text/csv' });
+        let url = window.URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = 'payment_confirmations.csv';
+        document.body.appendChild(a);
+        a.click();
+
+        const file = new File( [csvData], "payment_confirmations.csv", {type: "text/csv"} );
+        if( navigator.canShare && navigator.canShare( { files: [ file ] } ) ) {
+        navigator.share({
+            files: [ file ],
+            title: 'Payment Confirmation CSV',
+            text: 'Hi Team, Please see CSV file containing payment confirmation.',
+        })
+        .then( () => console.log( 'Share was successful.' ) )
+        .catch( (error) => console.log( 'Sharing failed', error.message ) );
+        }
+        else {
+        console.log( "can't share this" );
+        }
+
     } else {
         alert("Local storage feature is not supported on this browser")
     }
