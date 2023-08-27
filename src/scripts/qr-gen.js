@@ -58,6 +58,7 @@ function generateQRCode () {
     }
     
     var textVal = 'upi://pay?pn='+ merchant_name + '&pa='+ merchant_upi + '&am='+ amount.value + '&tn=' + context;
+    var textValForLink = 'upi://pay?pn='+ encodeURIComponent(merchant_name) + '&pa='+ merchant_upi + '&am='+ amount.value + '&tn=' + context;
     console.log(textVal);
     qrcode.makeCode(textVal);
     var message = document.getElementById("message")
@@ -75,10 +76,14 @@ function generateQRCode () {
     <br>
     `
     }
-    qrbutton.innerHTML = `<br><a href="${textVal}">
-    <input type="button" name="pay_upi" value="Scan QR or Click to open your UPI App">
-    </input><br>
-</a><br>`
+    if (volunteer == 0) {
+            qrbutton.innerHTML = `<br><a href="${textVal}">
+            <input type="button" name="pay_upi" value="Scan QR or Click to open your UPI App">
+            </input><br>
+        </a><br>` 
+    } else {
+        qrbutton.innerHTML = `<br><input type="button" name="share_upi" onclick="shareUPILink('${textValForLink}')" value="Please ask to scan QR or Click to Share UPI Link"/><br><br>`
+    }
     if (volunteer == 1) {
         reloadButton.innerHTML = `<br><input type="button" name="reload" value="Save the payment confirmation and reload form" onclick="saveAndReloadTheForm();"/>`
     } else {
@@ -91,6 +96,20 @@ function generateQRCode () {
         top: 0,
         behavior: "smooth" 
       });
+}
+
+function shareUPILink(upiLink) {
+    if( navigator.canShare ) {
+        navigator.share({
+            title: 'Payment Link (Please do not forward, Ask to regenerate)',
+            text: `${upiLink}`,
+        })
+        .then( () => console.log( 'Share was successful.' ) )
+        .catch( (error) => window.alert( `Sharing failed, Please copy the link and share, UPI Link: ${upiLink}`) );
+        }
+    else {
+        window.alert( `Browser does not support sharing Please copy the link and share UPI Link: ${upiLink}` );
+    }
 }
 
 function loadValue() {
@@ -279,7 +298,7 @@ function saveAndReloadTheForm(payment_type="upi") {
         const dateString = currentDate.toLocaleDateString();
         const timeString = currentDate.toLocaleTimeString();
         var contribution_type = "festival_contribution" 
-        confirmations.push({"name":name, "building" : building, "flat": flat, "amount" : amount, "payment_type" : payment_type, "upi" : merchant_upi, "payment_confirmed" : payment_checked, "contribution_type" : contribution_type, "txn_datetime" : `${dateString}-${timeString}`})
+        confirmations.push({ "name": name, "building": building, "flat": flat, "amount": amount, "payment_type": payment_type, "upi": merchant_upi, "payment_confirmed": payment_checked, "contribution_type": contribution_type, "txn_datetime": `${dateString}-${timeString}` })
         localStorage.setItem("confirmations", JSON.stringify(confirmations));
     } else {
         alert("Local storage feature is not supported on this browser")
@@ -305,4 +324,5 @@ function saveAndReloadTheForm(payment_type="upi") {
     alert("Thanks for your donation, Form has been saved and reloaded.")
   
 }
+
 
