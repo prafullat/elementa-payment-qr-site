@@ -278,7 +278,8 @@ function saveAndReloadTheForm(payment_type="upi") {
         const currentDate = new Date();
         const dateString = currentDate.toLocaleDateString();
         const timeString = currentDate.toLocaleTimeString();
-        confirmations.push({"name":name, "building" : building, "flat": flat, "amount" : amount, "payment_type" : payment_type, "upi" : merchant_upi, "payment_confirmed" : payment_checked, "txn_datetime" : `${dateString}-${timeString}`})
+        var contribution_type = "festival_contribution" 
+        confirmations.push({"name":name, "building" : building, "flat": flat, "amount" : amount, "payment_type" : payment_type, "upi" : merchant_upi, "payment_confirmed" : payment_checked, "contribution_type" : contribution_type, "txn_datetime" : `${dateString}-${timeString}`})
         localStorage.setItem("confirmations", JSON.stringify(confirmations));
     } else {
         alert("Local storage feature is not supported on this browser")
