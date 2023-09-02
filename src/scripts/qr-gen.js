@@ -1,6 +1,7 @@
 var merchant_name = 'Elementa Phase 1 CHS Festival';
 var merchant_upi = 'elementap1@srcb'
 
+
 function generateQRCode () {
     const urlParams = new URLSearchParams(window.location.search);
     var volunteer = urlParams.get('volunteer');
@@ -88,10 +89,21 @@ function generateQRCode () {
     if (volunteer == 1) {
         reloadButton.innerHTML = `<br><input type="button" name="reload" value="Save the payment confirmation and reload form" onclick="saveAndReloadTheForm();"/>`
     } else {
-        reloadButton.innerHTML = `<a href="mailto:elementaph1chs@gmail.com,customercare.elementa@gmail.com?Subject=Festival%20Collection%20for%20${building}-${flat}&Body=Dear%20Team,%0D%0A%0D%0APlease%20record%20this%20payment%20in%20Adda,%20Details%20below:%0D%0AUPI:%20${merchant_upi}%0D%0AName:%20${encodeURIComponent(name.value)}%0D%0AAmount:%20${amount.value}%0D%0AFlat:%20${building}-${flat}%0D%0AI%20have%20attached%20the%20payment%20confirmation%20screenshot%20with%20payment%20reference%20number.%0D%0AI%20confirm%20that%20without%20payment%20confirmation%20screenshot,%20Society%20will%20not%20be%20able%20to%20record%20the%20payment.">
+        const emailSubject = encodeURIComponent(`Festival Collection for ${building}-${flat}`);
+        const emailBody = encodeURIComponent(`Dear Team,
+
+Please record this payment in Adda, Details below:
+UPI: ${merchant_upi}
+Name: ${name.value}
+Amount: ${amount.value}
+Flat: ${building}-${flat}
+I have attached the payment confirmation screenshot with payment reference number.
+I confirm that without payment confirmation screenshot, Society will not be able to record the payment.`);
+
+        var emailTo = "elementaph1chs@gmail.com,customercare.elementa@gmail.com";
+        reloadButton.innerHTML = `<a href="mailto:${emailTo}?Subject=${emailSubject}&Body=${emailBody}">
         <input type="button" name="email_" value="Please email payment confirmation after successful payment">
-        </input><br>
-    </a><br>`
+        </input></a><br>`
     }
     window.scrollTo({
         top: 0,
